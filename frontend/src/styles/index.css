@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #6c4cf1;
+  --color-primary-hover: #5738d7;
+  --color-navy: #26304a;
+  --color-background: #fff8ed;
+  --color-surface: #ffffff;
+  --color-success: #38a978;
+  --color-border: #e7e5ee;
+  --color-muted: #667085;
+  --color-warning: #8a4b08;
+  --color-danger: #b42318;
+  --radius-card: 16px;
+  --radius-control: 12px;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  background: var(--color-background);
+  color: var(--color-navy);
+  font-family: Inter, sans-serif;
+}
+
+*:focus-visible {
+  outline: 3px solid #c4b5fd;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}

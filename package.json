@@ -1,0 +1,29 @@
+{
+  "name": "lexora-legaldesk",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Lexora LegalDesk — legal practice workspace for a small lawyer team",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c magenta,cyan \"npm run dev -w backend\" \"npm run dev -w frontend\"",
+    "build": "npm run build -w frontend",
+    "start": "npm run start -w backend",
+    "test": "npm run test -w backend && npm run test -w frontend",
+    "test:e2e": "npm run test -w frontend -- --run && playwright test",
+    "lint": "npm run lint -w backend && npm run lint -w frontend",
+    "bootstrap-admin": "npm run bootstrap-admin -w backend",
+    "seed:dev": "npm run seed:dev -w backend",
+    "sync:atlas": "npm run sync:atlas -w backend",
+    "test:email": "npm run test:email -w backend --",
+    "check:deploy": "npm run check:deploy -w backend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
