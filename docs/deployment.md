@@ -42,7 +42,7 @@ In this model, your backend and frontend are hosted together on a single Render 
 3. Click **New +** → **Web Service** (or connect your repo using the included [`render.yaml`](../render.yaml) Blueprint).
 4. Configure service settings:
    - **Environment:** `Node`
-   - **Build Command:** `npm install && npm run build`
+   - **Build Command:** `npm install --include=dev && npm run build`
    - **Start Command:** `npm start`
    - **Health Check Path:** `/api/v1/health`
 5. Add Environment Variables in the Render dashboard:
