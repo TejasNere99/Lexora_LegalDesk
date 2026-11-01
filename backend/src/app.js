@@ -6,6 +6,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
+import mongoose from 'mongoose';
 import { env } from './config/env.js';
 import { dbHealth } from './config/db.js';
 import { apiRouter } from './routes/index.js';
@@ -29,8 +30,10 @@ export function createApp() {
         directives: {
           defaultSrc: ["'self'"],
           scriptSrc: ["'self'", "'unsafe-inline'"],
-          styleSrc: ["'self'", "'unsafe-inline'"],
-          imgSrc: ["'self'", 'data:', 'blob:'],
+          styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+          styleSrcElem: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+          imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
           connectSrc: ["'self'", '*'],
           frameAncestors: ["'none'"],
         },
@@ -81,14 +84,32 @@ export function createApp() {
   app.use('/api', apiLimiter);
 
   // Health check endpoint (for load balancers & monitoring)
-  app.get('/api/v1/health', (_req, res) => {
+  app.get('/api/v1/health', async (_req, res) => {
+    const dbStatus = dbHealth();
+    let dbPing = 'ok';
+    let usersCount = null;
+    try {
+      if (mongoose.connection.readyState === 1 && mongoose.connection.db) {
+        await mongoose.connection.db.admin().ping();
+        usersCount = await mongoose.connection.collection('users').countDocuments();
+      } else {
+        dbPing = 'disconnected';
+      }
+    } catch (err) {
+      dbPing = `error: ${err.message}`;
+    }
+
     res.json({
       success: true,
       data: {
         service: 'lexora-legaldesk',
         environment: env.nodeEnv,
         time: new Date().toISOString(),
-        database: dbHealth(),
+        database: {
+          ...dbStatus,
+          ping: dbPing,
+          users: usersCount,
+        },
         timezone: env.timezone,
       },
       message: 'Health check',

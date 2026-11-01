@@ -20,9 +20,12 @@ export async function connectDb(uri = env.mongoUri) {
     autoIndex: !env.isProd,
     maxPoolSize: 20,
     minPoolSize: 2,
-    serverSelectionTimeoutMS: 8000,
+    serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000,
   });
+
+  const dbName = mongoose.connection.name;
+  console.log(`[MongoDB] Connected successfully to database: "${dbName}"`);
 }
 
 export async function disconnectDb() {
